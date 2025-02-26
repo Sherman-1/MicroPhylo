@@ -14,5 +14,5 @@ taxonkit list --ids 1 --indent "" | taxonkit filter -L species --discard-noranks
 taxonkit list --ids 1 --indent "" | taxonkit filter -E species \
     | awk '{print $1";"$1}' >> strain2species.csv
 
-## List all taxids belonging to viruses, others and unclassified 
+## List all taxids belonging to others and unclassified 
 taxonkit list --indent "" --ids "28384,12908" > badTaxids.txt
