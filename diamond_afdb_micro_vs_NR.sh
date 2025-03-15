@@ -1,8 +1,8 @@
 #!/bin/bash
 #PBS -q bim 
 #PBS -l host=node04
-#PBS -l ncpus=16
-#PBS -l mem=128Gb 
+#PBS -l ncpus=48
+#PBS -l mem=250Gb 
 #PBS -l walltime=100:00:00
 #PBS -koed
 
@@ -41,11 +41,11 @@ for fasta in "${file_paths[@]}"; do
   out_file="${out_file}_vs_NR"
 
   diamond_2.0.13 blastp --query "$fasta" --db /datas/NR/nr_2.0.13.dmnd \
-    --sensitive --evalue 0.00001 \
+    --sensitive --evalue 0.001 \
     --out /datas/SIMON/tmp/"$out_file".tsv \
     --outfmt 6 qseqid sseqid evalue qcovhsp scovhsp length pident staxids \
     --max-target-seqs 0 \
-    --tmpdir /datas/SIMON/tmp --threads 16 --log
+    --tmpdir /datas/SIMON/tmp --threads 48 --log
 
   sed -i '1i qseqid\tsseqid\tevalue\tqcovhsp\tscovhsp\tlength\tpident\tstaxids' /datas/SIMON/tmp/"$out_file".tsv
   duckdb -c "COPY (SELECT * FROM read_csv_auto('/datas/SIMON/tmp/"$out_file".tsv', delim='\t')) TO '/datas/SIMON/tmp/"$out_file".parquet' (FORMAT 'parquet', COMPRESSION 'gzip');"
